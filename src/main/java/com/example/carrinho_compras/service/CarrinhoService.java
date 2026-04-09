@@ -29,7 +29,7 @@ public class CarrinhoService {
 
     public void addCupom(String cupom) {
 
-        if ("BEMVINDO10".equalsIgnoreCase(cupom)) {
+        if ("BEMVINDO10".equals(cupom)) {
             this.descontoCupom = 0.10;
         } else {
 
