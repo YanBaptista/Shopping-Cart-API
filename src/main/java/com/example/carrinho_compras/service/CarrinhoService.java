@@ -15,6 +15,17 @@ public class CarrinhoService {
     private double descontoCupom = 0.0;
 
     public void adicionarProduto(Produto produto) {
+
+            if (produto == null) {
+                throw new IllegalArgumentException("O produto não pode ser nulo.");
+            }
+
+            if (produto.getNome() == null || produto.getNome().trim().isEmpty()) {
+                throw new IllegalArgumentException("O nome do produto não pode ser vazio.");
+            }
+
+
+
         if (produto.getPreco() <= 0) {
             throw new IllegalArgumentException("O preço do produto deve ser maior que zero");
         }
