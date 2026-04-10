@@ -1,0 +1,89 @@
+name: Pipeline Completa CI/CD
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  # JOB 1: Testes Unitários
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Rodar Testes
+        run: mvn test
+
+      - name: Armazenar Relatório de Testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-testes
+          path: target/surefire-reports/
+
+  # JOB 2: Build/Empacotamento (Roda em paralelo com os testes)
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Gerar Pacote (JAR)
+        run: mvn clean package -DskipTests
+
+      - name: Armazenar JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: pacote-distribuivel
+          path: target/*.jar
+
+  # JOB 3: Notificação (Roda após Testes e Build)
+  notification:
+    needs: [unit-tests, build]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configurar Python para Notificação
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Enviar E-mail de Notificação
+        env:
+          EMAIL_DESTINO: ${{ secrets.EMAIL_DESTINO }}
+          EMAIL_REMETENTE: ${{ secrets.EMAIL_REMETENTE }}
+          EMAIL_SENHA: ${{ secrets.EMAIL_SENHA }}
+          STATUS_TESTES: ${{ needs.unit-tests.result }}
+          STATUS_BUILD: ${{ needs.build.result }}
+        run: |
+          python - <<EOF
+          import smtplib, os
+          from email.mime.text import MIMEText
+
+          msg = MIMEText(f"Testes: {os.getenv('STATUS_TESTES')} | Build: {os.getenv('STATUS_BUILD')}")
+          msg['Subject'] = 'Pipeline CI/CD - Status Finalizado'
+          msg['From']    = os.getenv('EMAIL_REMETENTE')
+          msg['To']      = os.getenv('EMAIL_DESTINO')
+
+          try:
+              with smtplib.SMTP_SSL('smtp.gmail.com', 465) as s:
+                  s.login(os.getenv('EMAIL_REMETENTE'), os.getenv('EMAIL_SENHA'))
+                  s.send_message(msg)
+              print("E-mail enviado com sucesso!")
+          except Exception as e:
+              print(f"Erro ao enviar o e-mail: {e}")
+          EOF
