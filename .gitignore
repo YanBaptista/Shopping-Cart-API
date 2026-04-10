@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Logs customizados e de Erro ###
+*.log
+hs_err_pid*.log

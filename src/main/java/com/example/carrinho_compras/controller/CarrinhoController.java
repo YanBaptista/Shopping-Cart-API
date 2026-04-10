@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController // Diz ao Java que essa classe vai responder para a internet
-@RequestMapping("/carrinho") // Todas as URLs dessa classe vão começar com "/carrinho"
+@RestController
+@RequestMapping("/carrinho")
 public class CarrinhoController {
 
-    // Aqui o Controller "chama" o Service que nós criamos
+
     private final CarrinhoService carrinhoService;
 
     @Autowired
@@ -34,7 +34,7 @@ public class CarrinhoController {
     // Rota para adicionar um produto: POST http://localhost:8080/carrinho/adicionar
     @PostMapping("/adicionar")
     public void adicionarProdutoAoCarrinho(@RequestBody Produto produto) {
-        // O @RequestBody pega os dados do produto que o usuário enviar (ex: em formato JSON)
+
         carrinhoService.adicionarProduto(produto);
     }
 
