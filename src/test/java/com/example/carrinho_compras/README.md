@@ -143,18 +143,18 @@ carrinho-compras/
 
 ## 🤖 Uso de Inteligência Artificial no Projeto
 
-Nesta seção, declaramos como a IA (**Gemini**) foi integrada ao ciclo de desenvolvimento prático para elevar a qualidade do software, superar desafios técnicos do Git e garantir a robustez das regras de negócio.
+Nesta seção, declaramos como a IA (**Gemini**) foi integrada ao ciclo de desenvolvimento prático para elevar a qualidade do software e garantir a robustez das regras de negócio e da documentação.
 
 ### 📝 Prompts Utilizados e Resultados Obtidos
 
-- **Prompt 1 (Troubleshooting de DevOps):** *"Como resolver erro 403 Permission Denied ao fazer push no IntelliJ? A branch falha ao empurrar para o origin."*
-    - **Resultado:** A IA guiou a limpeza do Gerenciador de Credenciais do Windows e a execução de um push via terminal (`git push -u origin`), resolvendo o travamento de credenciais antigas e permitindo a entrega do código no repositório remoto.
+- **Prompt 1 (Engenharia de Testes):** *"Ele pediu para fazermos 10 testes. 5 inoportunos e 5 normais. Lembra desses testes inoportunos e normais e o que significam?"*
+    - **Resultado:** A IA clarificou os conceitos de *Caminho Feliz (Happy Path)* e *Casos Extremos (Edge Cases)*, estruturando o código para atingir a meta de testes estabelecida pela disciplina.
 
-- **Prompt 2 (Engenharia de Testes e TDD):** *"Preciso de testes inoportunos para um Carrinho de Compras em Java. O que acontece se o produto for nulo ou sem nome?"*
-    - **Resultado:** Utilizando a abordagem *Test-Driven Development (TDD)*, os testes inicialmente falharam. Com a orientação da IA, refatoramos o `CarrinhoService.java` para incluir o lançamento de `IllegalArgumentException` em casos de produtos nulos ou com strings vazias, blindando a API e fazendo a suíte de 20 testes passar com sucesso.
+- **Prompt 2 (Test-Driven Development e Controle de Versão):** *"Deu falha em 2 testes. Olhe no print. Antes de continuarmos, eu esqueci de criar uma nova branch, me ajuda com isso? Outra coisa, me instrua passo a passo na missão que você pediu para fazer os testes rodarem tranquilos..."*
+    - **Resultado:** A IA instruiu a criação segura de uma nova branch (`test/novos-cenarios-wagner`) via interface do IntelliJ e guiou a implementação de defesas (TDD) no `CarrinhoService.java` para barrar a entrada de produtos nulos ou sem nome, resolvendo as falhas apontadas pelo JUnit.
 
-- **Prompt 3 (Pipeline CI/CD):** *"Como estruturar um pipeline no GitHub Actions com jobs paralelos para Spring Boot?"*
-    - **Resultado:** Auxílio na escrita do `.yml`, garantindo a criação de jobs distintos para `test` e `build`, otimizando o tempo de execução e configurando o salvamento de Artifacts (o arquivo `.jar`).
+- **Prompt 3 (Documentação):** *"O Yan mandou o Read Me. Podemos completar o dele, já que ele já mexeu"*
+    - **Resultado:** Auxílio na formatação e unificação da documentação final, agregando as informações do pipeline CI/CD estruturado pelo grupo com os requisitos de Contexto Acadêmico e Declaração de IA.
 
 ---
 
