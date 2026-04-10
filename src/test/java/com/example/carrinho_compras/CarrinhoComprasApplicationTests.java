@@ -126,5 +126,128 @@ class CarrinhoComprasApplicationTests {
 		});
 	}
 
+	@Test
+	void carrinhoDeveIniciarVazio() {
+		CarrinhoService carrinho = new CarrinhoService();
+
+		assertEquals(0, carrinho.getItens().size());
+		assertEquals(0.0, carrinho.calcularTotal());
+	}
+
+	@Test
+	void adicionarMultiplosProdutosAumentaTamanhoDaLista() {
+		CarrinhoService carrinho = new CarrinhoService();
+		Produto p1 = new Produto("1", "Processador", 1000.0, 1);
+		Produto p2 = new Produto("2", "Placa Mãe", 800.0, 1);
+		Produto p3 = new Produto("3", "Memória RAM", 300.0, 1);
+
+		carrinho.adicionarProduto(p1);
+		carrinho.adicionarProduto(p2);
+		carrinho.adicionarProduto(p3);
+
+		assertEquals(3, carrinho.getItens().size());
+	}
+
+	@Test
+	void calcularTotalComPrecosFracionados() {
+		CarrinhoService carrinho = new CarrinhoService();
+		Produto p1 = new Produto("1", "Cabo HDMI", 25.50, 2); // 51.0
+		Produto p2 = new Produto("2", "Pen Drive", 35.75, 1); // 35.75
+
+		carrinho.adicionarProduto(p1);
+		carrinho.adicionarProduto(p2);
+
+		assertEquals(86.75, carrinho.calcularTotal());
+	}
+
+	@Test
+	void calcularTotalComCupomEVariosProdutos() {
+		CarrinhoService carrinho = new CarrinhoService();
+		Produto p1 = new Produto("1", "Notebook", 3000.0, 1);
+		Produto p2 = new Produto("2", "Mousepad", 100.0, 1);
+
+		carrinho.adicionarProduto(p1);
+		carrinho.adicionarProduto(p2);
+		carrinho.addCupom("BEMVINDO10");
+
+		assertEquals(2790.0, carrinho.calcularTotal());
+	}
+
+	@Test
+	void calcularTotalComQuantidadeAltaDeUmUnicoProduto() {
+		CarrinhoService carrinho = new CarrinhoService();
+		Produto p1 = new Produto("1", "Parafuso", 0.50, 1000); // 1000 parafusos
+
+		carrinho.adicionarProduto(p1);
+
+		assertEquals(500.0, carrinho.calcularTotal());
+	}
+
+
+	@Test
+	void naoDeveAdicionarProdutoNulo() {
+		CarrinhoService carrinho = new CarrinhoService();
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			carrinho.adicionarProduto(null);
+		});
+	}
+
+	@Test
+	void naoDeveAplicarCupomVazio() {
+		CarrinhoService carrinho = new CarrinhoService();
+		Produto p1 = new Produto("1", "Teclado", 100.0, 1);
+		carrinho.adicionarProduto(p1);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			carrinho.addCupom("");
+		});
+	}
+
+	@Test
+	void naoDeveAplicarCupomNulo() {
+		CarrinhoService carrinho = new CarrinhoService();
+		Produto p1 = new Produto("1", "Teclado", 100.0, 1);
+		carrinho.adicionarProduto(p1);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			carrinho.addCupom(null);
+		});
+	}
+
+	@Test
+	void naoDeveAdicionarProdutoComNomeVazio() {
+		CarrinhoService carrinho = new CarrinhoService();
+
+		Produto p1 = new Produto("1", "", 100.0, 1);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			carrinho.adicionarProduto(p1);
+		});
+	}
+
+	@Test
+	void naoDeveAplicarCupomInvalidoOuInexistente() {
+		CarrinhoService carrinho = new CarrinhoService();
+		Produto p1 = new Produto("1", "Monitor", 800.0, 1);
+		carrinho.adicionarProduto(p1);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			carrinho.addCupom("CUPOM_FALSO_123");
+		});
+	}
+
+	@Test
+	void adicionarOMesmoProdutoDuasVezes_SomaValoresCorretamente() {
+		CarrinhoService carrinho = new CarrinhoService();
+		Produto p1 = new Produto("1", "Cabo", 10.0, 1);
+
+		carrinho.adicionarProduto(p1);
+		carrinho.adicionarProduto(p1); // Adiciona de novo
+
+		// Assert: 10.0 + 10.0 = 20.0 e 2 itens na lista
+		assertEquals(2, carrinho.getItens().size());
+		assertEquals(20.0, carrinho.calcularTotal());
+	}
 
 }
