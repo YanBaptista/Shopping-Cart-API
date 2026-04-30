@@ -93,8 +93,12 @@ jobs:
     name: Deploy to Production
     needs: [unit-tests, build]
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://shopping-cart-api-seb6.onrender.com
     steps:
       - name: Trigger Render Deploy
         run: |
-          curl -f ${{ secrets.RENDER_DEPLOY_HOOK }}
-          echo "Deploy disparado com sucesso para: https://shopping-cart-api-seb6.onrender.com"
+          echo "🚀 Iniciando deploy..."
+          curl -X POST -f ${{ secrets.RENDER_DEPLOY_HOOK }}
+          echo "✅ Deploy disparado com sucesso!"
