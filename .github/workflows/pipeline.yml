@@ -87,3 +87,12 @@ jobs:
           except Exception as e:
               print(f"Erro ao enviar o e-mail: {e}")
           EOF
+          deploy:
+              name: Deploy to Production
+              needs: [unit-tests, build] # Só roda se os testes e o build passarem
+              runs-on: ubuntu-latest
+              steps:
+                - name: Trigger Render Deploy
+                  run: |
+                    curl -f ${{ secrets.RENDER_DEPLOY_HOOK }}
+                    echo "Deploy disparado com sucesso para: https://shopping-cart-api-seb6.onrender.com"
